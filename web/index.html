@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>GoFetchRSS — Website to RSS</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/pick/picker.css">
+</head>
+<body>
+<header>
+  <h1>GoFetchRSS</h1>
+  <p>Convert sites without RSS into feeds. Copy the feed URL into your reader.</p>
+  <div class="actions">
+    <button id="addBtn">+ Add site</button>
+    <a id="opmlLink" href="/export.opml">Download OPML</a>
+  </div>
+</header>
+<main>
+  <div id="error" class="error" hidden></div>
+  <table id="sitesTable">
+    <thead><tr>
+      <th>Name</th><th>URL</th><th>Every</th><th>Status</th><th>Items</th><th>Feeds (copy into reader)</th><th></th>
+    </tr></thead>
+    <tbody id="sitesBody"><tr><td colspan="7">Loading…</td></tr></tbody>
+  </table>
+
+  <div id="modal" hidden>
+    <div class="modal-card">
+      <h2 id="modalTitle">Add site</h2>
+      <form id="siteForm">
+        <label>Name <input name="name" required placeholder="Example blog"></label>
+        <div class="row mode-row">
+          <label><input type="radio" name="source_kind" value="html" checked> Web page</label>
+          <label><input type="radio" name="source_kind" value="json"> JSON API</label>
+          <label><input type="radio" name="source_kind" value="weibo"> Weibo user</label>
+        </div>
+        <div id="htmlFields">
+        <label>Page URL <input name="url" placeholder="https://example.com/news"></label>
+        <div class="row mode-row">
+          <label><input type="radio" name="extraction_mode" value="auto" checked> Auto-detect (default)</label>
+          <label><input type="radio" name="extraction_mode" value="manual"> Manual CSS</label>
+          <button type="button" id="detectBtn">Auto-detect</button>
+          <button type="button" id="pickBtn" title="Pick selectors visually on the mirrored page">Pick visually</button>
+        </div>
+        <div id="detectResult" class="preview" hidden></div>
+        <details id="manualDetails">
+          <summary>Manual selectors (advanced — edit auto-detected values here)</summary>
+          <div class="grid">
+            <label>Item selector <input name="item_selector" placeholder="article.post, .news-item, li"><small>Repeating element, e.g. <code>article</code></small></label>
+            <label>Title selector <input name="title_selector" placeholder="h2, .title, a"><small>Inside each item</small></label>
+            <label>Link selector <input name="link_selector" placeholder="a"><small>Defaults to first &lt;a&gt; in item</small></label>
+            <label>Content selector <input name="content_selector" placeholder=".summary, p"><small>Optional HTML to include</small></label>
+            <label>Date selector <input name="date_selector" placeholder="time, .date"><small>Optional</small></label>
+          </div>
+        </details>
+        </div>
+        <div id="jsonFields" hidden>
+          <label>API URL <input name="api_url" placeholder="https://example.com/api/posts"></label>
+          <div class="grid">
+            <label>Items path* <input name="items_path" placeholder="data.cards"><small>Dot path to the item array</small></label>
+            <label>Item root <input name="item_root" placeholder="mblog"><small>Optional sub-object per item</small></label>
+            <label>Title path <input name="title_path" placeholder="title"><small>Empty = from content text</small></label>
+            <label>Content path <input name="content_path" placeholder="text"><small>HTML kept as-is</small></label>
+            <label>Link path <input name="link_path" placeholder="url"></label>
+            <label>Link template <input name="link_template" placeholder="https://…/{id}"><small>{field} placeholders</small></label>
+            <label>Date path <input name="date_path" placeholder="created_at"></label>
+            <label>Date format <input name="date_format" placeholder="2006-01-02 15:04:05"><small>Go layout; empty = auto</small></label>
+          </div>
+        </div>
+        <div id="weiboFields" hidden>
+          <label>Weibo UID* <input name="weibo_uid" placeholder="6048569942"><small>Digits from m.weibo.cn/u/&lt;uid&gt; (use the mobile URL to find public profiles without logging in)</small></label>
+          <p class="hint">No login needed — the app mints its own guest session automatically (same trick as RSSHub's visitor cookies). If Weibo ever rejects it, the site flags ⚠ Needs review; you may then paste your own session cookie below as <code>{"Cookie":"SUB=…"}</code> (devtools → Application → Cookies on m.weibo.cn).</p>
+        </div>
+        <label>Session headers (JSON, optional) <input name="headers" placeholder='{"Cookie":"SUB=…"}'><small>Sent with every request; where login cookies live</small></label>
+        <label>Poll every (minutes) <input name="poll_minutes" type="number" min="5" value="60"></label>
+        <label class="row"><input type="checkbox" name="enabled" checked> Enabled</label>
+        <div id="preview" class="preview" hidden></div>
+        <div class="modal-actions">
+          <button type="button" id="testBtn">Test source</button>
+          <span class="spacer"></span>
+          <button type="button" id="cancelBtn">Cancel</button>
+          <button type="submit" id="saveBtn">Save</button>
+        </div>
+      </form>
+      <p class="hint">Auto-detect finds the repeating list of links (needs ≥3 items). Over-capture can happen (e.g. sidebar links) — just edit the selectors after, or open Manual. Tip: disable JavaScript (uBlock) first — if content disappears, this tool can't see it (no JS rendering).</p>
+    </div>
+  </div>
+</main>
+<div id="pickerModal" hidden>
+  <div class="picker-wrap">
+    <div class="picker-main">
+      <div class="picker-bar">
+        <span id="pickerCrumb">hover the page…</span>
+        <button id="pickWider" type="button" title="Select parent element (same as ↑)">▲ Parent</button>
+        <button id="pickNarrower" type="button" title="Back to child element (same as ↓)">▼ Child</button>
+        <button id="pickerClose" type="button">Close</button>
+      </div>
+      <iframe id="pickFrame" title="Page preview" sandbox="allow-same-origin"></iframe>
+    </div>
+    <aside id="rspk-panel"></aside>
+  </div>
+</div>
+<script src="/pick/picker-modal.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

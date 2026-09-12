@@ -1,0 +1,31 @@
+/* Picker panel + highlight. Loaded inside shadow DOM; page styles can't leak in. */
+#rspk-panel {
+  position: fixed; top: 0; right: 0; width: 340px; height: 100vh;
+  background: #fff; color: #1a1a1a; z-index: 2147483647;
+  font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif; font-size: 13px;
+  box-shadow: -2px 0 12px rgba(0,0,0,.25); padding: 12px; overflow-y: auto;
+  box-sizing: border-box;
+}
+#rspk-panel h1 { font-size: 15px; margin: 0 0 8px; }
+#rspk-panel code { background: #f1f5f9; padding: 1px 4px; border-radius: 4px; word-break: break-all; }
+#rspk-panel input[type=text], #rspk-panel input:not([type]), #rspk-panel input[type=number] {
+  width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 6px; margin-top: 2px; box-sizing: border-box;
+}
+#rspk-panel label { display: block; margin: 6px 0; }
+.rspk-crumb { background: #111827; color: #e5e7eb; border-radius: 6px; padding: 6px 8px; font-family: monospace; font-size: 11px; margin-bottom: 6px; }
+.rspk-crumb span { cursor: pointer; }
+.rspk-crumb span:hover { color: #93c5fd; text-decoration: underline; }
+.rspk-hint { color: #555; font-size: 12px; margin-bottom: 6px; }
+.rspk-slot { border: 2px solid #e5e7eb; border-radius: 6px; padding: 6px; margin: 6px 0; cursor: pointer; }
+.rspk-slot.armed { border-color: #2563eb; background: #eff6ff; }
+.rspk-slot b { display: block; font-size: 12px; }
+.rspk-row { display: flex; gap: 6px; align-items: center; }
+.rspk-btns { display: flex; gap: 8px; margin: 8px 0; }
+#rspk-panel button { background: #e5e7eb; color: #111; border: 0; border-radius: 6px; padding: 7px 12px; cursor: pointer; }
+#rspk-panel button:hover { background: #d1d5db; }
+#rspk-panel button.primary, #rspk-save { background: #2563eb; color: #fff; }
+#rspk-save:hover { background: #1d4ed8; }
+#rspk-back { align-self: center; font-size: 12px; }
+.rspk-result { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px; margin-top: 6px; }
+.rspk-result ul { margin: 6px 0 0; padding-left: 18px; }
+.rspk-result li { margin: 2px 0; }
