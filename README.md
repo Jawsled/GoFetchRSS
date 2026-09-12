@@ -6,15 +6,15 @@ If you are on Linux and can run something like FreshRSS, that is more comprehens
 
 ## Features
 
-**Source types: **
+**Source types:**
 - **Webpage :** Point it at a page plus CSS selectors and it extracts repeating items. Per-site poll interval, custom request headers/cookies.
 - **JSON API.** Point it at any JSON endpoint with dot-path field mappings (items array, title/content/link/date, link templates like `https://…/{id}`).
 - **Weibo user:** Enter just the numeric UID from `m.weibo.cn/u/<uid>`.
 
-**Contents Extraction: **
-- **Auto-detect (default).** Just paste Name + URL. The engine finds repeating link groups, prefers heading links over tag links, recognizes stretched-card layouts (whole card is one invisible link, title in a heading), and tells you when a site already publishes a native feed you should use directly.
-- **Candidate picker: ** When auto-detect finds several plausible lists, it offers each with sample titles and a Use button.
-- **Visual picker: ** "Pick visually" opens the page in an in-app preview (sandboxed iframe, scripts stripped, nothing runs). Hover highlights the exact element with a tag label, arrow keys / Parent-Child buttons / breadcrumb walk the tree, click assigns Item container, Title, and Link. Invisible overlay links are pierced automatically and suggested for the Link slot.
+**Contents Extraction:**
+- **Auto-detect (default):** Just paste Name + URL. The engine finds repeating link groups, prefers heading links over tag links, recognizes stretched-card layouts (whole card is one invisible link, title in a heading), and tells you when a site already publishes a native feed you should use directly.
+- **Candidate picker:** When auto-detect finds several plausible lists, it offers each with sample titles and a Use button.
+- **Visual picker:** "Pick visually" opens the page in an in-app preview (sandboxed iframe, scripts stripped, nothing runs). Hover highlights the exact element with a tag label, arrow keys / Parent-Child buttons / breadcrumb walk the tree, click assigns Item container, Title, and Link. Invisible overlay links are pierced automatically and suggested for the Link slot.
 
 **Output formats:**
 - `/feeds/{id}.xml` (RSS 2.0), `/feeds/{id}.atom`, `/feeds/{id}.json` (JSON Feed 1.1). Copy-icon buttons in the UI for each URL.
@@ -33,7 +33,7 @@ If you are on Linux and can run something like FreshRSS, that is more comprehens
 
 ## Installation
 
-1. Download or build `GoFetchRSS.exe` (see Building). The app is portable, and creates / stores data in local directory.
+1. Build `GoFetchRSS.exe` (see Building). The app is portable, and creates / stores data in local directory.
 2. Double-click it (or run it). It listens on `http://127.0.0.1:9284` by default.
 
 Data lives next to the exe in `.\data\data.db`. For a permanent install, run with `--data-dir "%AppData%\GoFetchRSS"` so reinstalls do not touch your database.
